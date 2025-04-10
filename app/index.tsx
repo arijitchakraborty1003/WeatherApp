@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { getWeatherByCity } from '../services/weatherServices';
 import WeatherInfo from '../components/weatherInfo';
+import { getBackgroundColor } from '../utils/backgroundHelper';
 import { WeatherData } from '../types';
 
 export default function HomeScreen() {
@@ -9,6 +17,7 @@ export default function HomeScreen() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const backgroundColor = weather ? getBackgroundColor(weather.weather[0].main) : '#ffffff';
 
   const handleGetWeather = async () => {
     if (!city) return;
@@ -26,9 +35,9 @@ export default function HomeScreen() {
       setLoading(false);
     }
   };
-
+ 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.title}>Weather App</Text>
       <TextInput
         placeholder="Enter city name"
