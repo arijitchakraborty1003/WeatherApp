@@ -1,11 +1,34 @@
 import axios from 'axios';
 import { WeatherData } from '../types';
 
-const API_KEY = 'YOUR_API_KEY_HERE';
+const API_KEY = '865f2babe9f6d938145c021ae8b86ae1';
 
-export const getWeatherByCity = async (city: string): Promise<WeatherData> => {
-  const response = await axios.get(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
-  );
-  return response.data;
+//import { OPENWEATHER_API_KEY } from '@env';
+
+const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
+export const getWeatherByCity = async (city: string) => {
+  const url = `${BASE_URL}?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`;
+
+  // Log the full request URL
+  console.log('Fetching weather data from:', url);
+
+  const response = await fetch(url);
+
+  // Log response status
+  console.log('Response status:', response.status);
+
+  if (!response.ok) {
+    // Log error response text for debugging
+    const errorText = await response.text();
+    console.error('Error fetching weather:', errorText);
+    throw new Error('Failed to fetch weather data');
+  }
+
+  const data = await response.json();
+
+  // Log the actual response data
+  console.log('Weather data received:', data);
+
+  return data;
 };
