@@ -32,3 +32,11 @@ export const getWeatherByCity = async (city: string) => {
 
   return data;
 };
+
+export const getWeatherByCoords = async (lat: number, lon: number) => {
+  const response = await fetch(
+    `${BASE_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
+  );
+  const data = await response.json();
+  return data;
+};

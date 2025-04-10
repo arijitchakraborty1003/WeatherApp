@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,10 @@ import {
   Button,
   StyleSheet,
   ActivityIndicator,
+  Alert 
 } from 'react-native';
-import { getWeatherByCity } from '../services/weatherServices';
+import * as Location from 'expo-location';
+import { getWeatherByCity, getWeatherByCoords } from '../services/weatherServices';
 import WeatherInfo from '../components/weatherInfo';
 import { getBackgroundColor } from '../utils/backgroundHelper';
 import { WeatherData } from '../types';
@@ -18,6 +20,26 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const backgroundColor = weather ? getBackgroundColor(weather.weather[0].main) : '#ffffff';
+  const fetchWeatherByLocation = async () => {
+    try {
+      setLoading(true);
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      const data = await getWeatherByCoords(latitude, longitude);
+      setWeather(data);
+      setCity(data.name); // autofill city input
+    } catch (err) {
+      setError('Could not fetch weather by location.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGetWeather = async () => {
     if (!city) return;
@@ -35,7 +57,11 @@ export default function HomeScreen() {
       setLoading(false);
     }
   };
- 
+
+  useEffect(() => {
+    fetchWeatherByLocation();
+  }, []);
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.title}>Weather App</Text>
