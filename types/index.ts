@@ -12,3 +12,19 @@ export interface WeatherData {
     id: number;
   }[];
 }
+
+export interface ForecastItem {
+  dt: number;
+  dt_txt: string;
+  main: {
+    temp: number;
+  };
+  weather: {
+    icon: string;
+    description: string;
+  }[];
+}
+
+export interface ForecastResponse {
+  list: ForecastItem[];
+}
