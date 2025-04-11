@@ -19,3 +19,24 @@ export const getBackgroundColor = (weatherMain: string): string => {
       return '#f3f4f6'; // default gray
   }
 };
+
+export const getWeatherBackground = (main: string) => {
+  switch (main.toLowerCase()) {
+    case 'clear':
+      return require('../assets/bg/clear.jpg');
+    case 'clouds':
+      return require('../assets/bg/cloudy.jpg');
+    case 'rain':
+      return require('../assets/bg/rainy.jpg');
+    case 'snow':
+      return require('../assets/bg/snow.jpg');
+    case 'thunderstorm':
+      return require('../assets/bg/thunderstorm.jpg');
+    case 'mist':
+    case 'haze':
+    case 'fog':
+      return require('../assets/bg/fog.jpg');
+    default:
+      return require('../assets/bg/default.jpg');
+  }
+};

@@ -115,35 +115,47 @@ const saveFavorites = async (newFavorites: string[]) => {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={styles.title}>Weather App</Text>
-      <TextInput
-        placeholder="Enter city name"
-        value={city}
-        onChangeText={handleCityChange}
-        style={styles.input}
-      />
+      <View style={styles.inputRow}>
+        <TextInput
+          placeholder="Enter city"
+          value={city}
+          onChangeText={handleCityChange}
+          style={styles.inputCompact}
+        />
+        <TouchableOpacity onPress={handleGetWeather} style={styles.getButton}>
+          <Text style={styles.getButtonText}>Go</Text>
+        </TouchableOpacity>
+      </View>
 
       {suggestions.length > 0 && (
+        <View style={styles.suggestionsContainer}>
         <FlatList
           data={suggestions}
-          keyExtractor={(item) => item}
+          keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
               <Text style={styles.suggestion}>{item}</Text>
             </TouchableOpacity>
           )}
         />
+      </View>
       )}
       {favorites.length > 0 && (
-      <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 20 }}>
           <Text style={{ fontWeight: 'bold' }}>Favorite Cities:</Text>
           {favorites.map((fav) => (
-            <TouchableOpacity key={fav} onPress={() => setCity(fav)}>
+            <TouchableOpacity
+              key={fav}
+              onPress={() => {
+                setCity(fav);
+                handleGetWeather(); 
+              }}
+            >
               <Text style={{ color: 'blue', paddingVertical: 4 }}>{fav}</Text>
             </TouchableOpacity>
           ))}
         </View>
-      )}
-      <Button title="Get Weather" onPress={handleGetWeather} />
+)}
       {loading && <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />}
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {weather && (
@@ -173,10 +185,47 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, textAlign: 'center', marginBottom: 20 },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, borderRadius: 5 },
   error: { color: 'red', marginTop: 10, textAlign: 'center' },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  
+  inputCompact: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  
+  getButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+  },
+  
+  getButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  suggestionsContainer: {
+    position: 'absolute',
+    top: 60, // adjust depending on your input position
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    zIndex: 10,
+    elevation: 10, // for Android
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
   suggestion: {
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderBottomColor: '#ccc',
+    paddingVertical: 10,
     borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
 });
