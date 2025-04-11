@@ -73,18 +73,26 @@ const saveFavorites = async (newFavorites: string[]) => {
     }
   };
 
-  const handleGetWeather = async () => {
-    if (!city) return;
+  const handleGetWeather = async (selectedCity?: string) =>{
 
+    var cityToFetch = selectedCity;
+    if(!cityToFetch)
+        cityToFetch = city;
+
+    if (!cityToFetch) return;
+  
+    console.log('Fetching cityToFetch before Data :',cityToFetch);
+    if (!cityToFetch) return;
+    console.log('Fetching Data :',cityToFetch);
     setLoading(true);
     setError('');
     setWeather(null);
     setForecast(null);
     try {
-      const data = await getWeatherByCity(city);
+      const data = await getWeatherByCity(cityToFetch);
       setWeather(data);
-      const forecastData = await getForecastByCity(city);
-      //console.log('Forecast Data:', forecastData); // 🧪 Check if this shows the data
+      const forecastData = await getForecastByCity(cityToFetch);
+      console.log('Forecast Data:', forecastData); // 🧪 Check if this shows the data
       setForecast(forecastData);
     } catch (err) {
       setError('Could not fetch weather. Try another city.');
@@ -92,6 +100,8 @@ const saveFavorites = async (newFavorites: string[]) => {
       setLoading(false);
     }
   };
+
+
   const handleCityChange = async (text: string) => {
     setCity(text);
     if (text.length > 1) {
@@ -122,7 +132,8 @@ const saveFavorites = async (newFavorites: string[]) => {
           onChangeText={handleCityChange}
           style={styles.inputCompact}
         />
-        <TouchableOpacity onPress={handleGetWeather} style={styles.getButton}>
+        <TouchableOpacity onPress={() => { handleGetWeather();}} 
+        style={styles.getButton}>
           <Text style={styles.getButtonText}>Go</Text>
         </TouchableOpacity>
       </View>
@@ -148,7 +159,8 @@ const saveFavorites = async (newFavorites: string[]) => {
               key={fav}
               onPress={() => {
                 setCity(fav);
-                handleGetWeather(); 
+                console.log('Fetching city Data :',fav);
+                handleGetWeather(fav); 
               }}
             >
               <Text style={{ color: 'blue', paddingVertical: 4 }}>{fav}</Text>
