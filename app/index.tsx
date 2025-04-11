@@ -17,6 +17,7 @@ import { FlatList, TouchableOpacity } from 'react-native';
 import { fetchCitySuggestions } from '../services/cityService';
 import  ForecastList  from '../components/ForecastList';
 import { ForecastResponse } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
   const [city, setCity] = useState('');
@@ -26,6 +27,27 @@ export default function HomeScreen() {
   const backgroundColor = weather ? getBackgroundColor(weather.weather[0].main) : '#ffffff';
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const FAVORITES_KEY = 'FAVORITE_CITIES';
+
+const loadFavorites = async () => {
+  try {
+    const saved = await AsyncStorage.getItem(FAVORITES_KEY);
+    if (saved) {
+      setFavorites(JSON.parse(saved));
+    }
+  } catch (error) {
+    console.error('Failed to load favorites', error);
+  }
+};
+
+const saveFavorites = async (newFavorites: string[]) => {
+  try {
+    await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
+  } catch (error) {
+    console.error('Failed to save favorites', error);
+  }
+};
   
   const fetchWeatherByLocation = async () => {
     try {
@@ -87,6 +109,7 @@ export default function HomeScreen() {
   
   useEffect(() => {
     fetchWeatherByLocation();
+    loadFavorites();
   }, []);
 
   return (
@@ -110,10 +133,36 @@ export default function HomeScreen() {
           )}
         />
       )}
+      {favorites.length > 0 && (
+      <View style={{ marginTop: 20 }}>
+          <Text style={{ fontWeight: 'bold' }}>Favorite Cities:</Text>
+          {favorites.map((fav) => (
+            <TouchableOpacity key={fav} onPress={() => setCity(fav)}>
+              <Text style={{ color: 'blue', paddingVertical: 4 }}>{fav}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       <Button title="Get Weather" onPress={handleGetWeather} />
       {loading && <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />}
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      {weather && <WeatherInfo data={weather} />}
+      {weather && (
+      <WeatherInfo
+        data={weather}
+        isFavorite={favorites.includes(city)}
+        onFavoriteToggle={() => {
+          if (!city) return;
+
+          const isFav = favorites.includes(city);
+          const updated = isFav
+            ? favorites.filter(c => c !== city)
+            : [...favorites, city];
+
+          setFavorites(updated);
+          saveFavorites(updated);
+        }}
+        />
+      )}
       {forecast && <ForecastList data={forecast.list} />}
     </View>
   );

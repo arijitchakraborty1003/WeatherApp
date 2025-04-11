@@ -1,14 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { WeatherData } from '../types';
 import LottieView from 'lottie-react-native';
 import { getWeatherAnimation } from '../utils/animationHelper';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   data: WeatherData;
+  isFavorite: boolean;
+  onFavoriteToggle: () => void;
 }
 
-export default function WeatherInfo({ data }: Props) {
+export default function WeatherInfo({ data, isFavorite, onFavoriteToggle }: Props) {
   const {
     name,
     main: { temp, feels_like, humidity, pressure },
@@ -31,7 +34,17 @@ export default function WeatherInfo({ data }: Props) {
           autoPlay
           loop
           style={styles.animation}
-        />  
+        /> 
+        <View style={styles.header}>
+        <Text style={styles.city}>{name}</Text>
+        <TouchableOpacity onPress={onFavoriteToggle}>
+          <Ionicons
+            name={isFavorite ? 'heart' : 'heart-outline'}
+            size={28}
+            color={isFavorite ? 'red' : 'gray'}
+          />
+  </TouchableOpacity>
+</View>
       <Text style={styles.city}>{name}</Text>
       <Text style={styles.temp}>{temp}°C</Text>
       <Text style={styles.desc}>{weather[0].description}</Text>
@@ -60,5 +73,10 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderTopWidth: 1,
     borderTopColor: '#ccc',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
