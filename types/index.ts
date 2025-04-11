@@ -1,17 +1,32 @@
 export interface WeatherData {
   name: string;
-  main: {
-    temp: number;
-    humidity: number;
-    pressure: number;
-  };
   weather: {
     main: string;
     description: string;
     icon: string;
     id: number;
   }[];
+  main: {
+    temp: number;
+    feels_like: number;
+    humidity: number;
+    pressure: number;
+  };
+  wind: {
+    speed: number;
+    deg: number;
+  };
+  clouds: {
+    all: number;
+  };
+  sys: {
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
 }
+
+
 
 export interface ForecastItem {
   dt: number;
@@ -28,3 +43,4 @@ export interface ForecastItem {
 export interface ForecastResponse {
   list: ForecastItem[];
 }
+
