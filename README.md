@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+Weather App 🌦️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform weather application built with React Native, TypeScript, and Expo Router, powered by the OpenWeather API.
 
-## Get started
+🔗 GitHub Repository
+👉 https://github.com/arijit100381/weather-app
 
-1. Install dependencies
+🚀 Features
+Real-time weather by current location 🌍
 
-   ```bash
-   npm install
-   ```
+5-day / 3-hour forecast with detailed weather data 📊
 
-2. Start the app
+Search cities with autocomplete 🔍
 
-   ```bash
-    npx expo start
-   ```
+Favorite cities with quick access ⭐
 
-In the output, you'll find options to open the app in a
+Dynamic background based on weather ☁️
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Responsive and smooth UI
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+🛠️ Setup Instructions
+Prerequisites
+Node.js & npm
 
-## Get a fresh project
+Expo CLI (npm install -g expo-cli)
 
-When you're ready, run:
+Android Studio (for emulator) or a physical device
 
-```bash
-npm run reset-project
-```
+OpenWeather API key (free: https://openweathermap.org/api)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Installation
+Clone the repo:
 
-## Learn more
+bash
+Copy
+Edit
+git clone https://github.com/arijit100381/weather-app.git
+cd weather-app
+Install dependencies:
 
-To learn more about developing your project with Expo, look at the following resources:
+bash
+Copy
+Edit
+npm install
+Add your OpenWeather API key:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Create a file .env in the root and add:
 
-## Join the community
+env
+Copy
+Edit
+OPENWEATHER_API_KEY=your_api_key_here
+Run the app:
 
-Join our community of developers creating universal apps.
+bash
+Copy
+Edit
+npx expo start
+📱 APK Build (Android)
+bash
+Copy
+Edit
+npx expo run:android
+Make sure your emulator is running or device is connected via USB with debugging enabled.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+🖼️ Screenshots
+(Add screenshots here – I can help if you provide some or want me to guide you through it.)
+
+🧠 Approach
+Built using the Expo ecosystem to streamline development.
+
+Weather fetching logic separated into service files.
+
+Forecast and current weather shown using dedicated UI components.
+
+City suggestions are dynamically fetched and displayed using a dropdown overlay.
+
+Favorites are persisted using AsyncStorage.
+
